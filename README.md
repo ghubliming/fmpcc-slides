@@ -6,8 +6,8 @@ Pages. The deck is one self-contained HTML file, so this repository only holds t
 | | |
 | :-- | :-- |
 | **Branches** | `master` holds only a minimal README. The site lives on `test`, which Pages publishes from. |
-| **Site** | `index.html` = deck v3.11 · `presentation.pdf` = its PDF backup · `.nojekyll` = serve the files as they are |
-| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v3/v3.11/` on 2026-10-09 (sha256 `19ab5afa3e11316f…` / `a2e8b87f76137141…`) |
+| **Site** | `index.html` = deck v3.12 · `presentation.pdf` = its PDF backup · `.nojekyll` = serve the files as they are |
+| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v3/v3.12/` on 2026-10-14 (sha256 `18b2a67616859a3e…` / `f7f2dd611a461f1f…`) |
 | **Live** | https://ghubliming.github.io/fmpcc-slides/ |
 | **Plan** | `FM-PCC/logs_in_develop/Writing/Presentation/plan/HOSTING.md`, section "Test setup" |
 
