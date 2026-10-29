@@ -2057,18 +2057,19 @@ display:block!important;
 <ul>
 <li><strong>RQ1 · Yes, on the benchmark of DPCC.</strong> At one network evaluation, CI-MeanFM and FM keep the baseline’s success within the constraints, in fewer control steps, at about a thirtieth of its time; diffusion run at one step loses it.<br>
 <span class="muted">Shown by D3IL-avoiding.</span></li>
-<li><strong>RQ2 · It depends on the budget.</strong> Where endpoint projection has a step before the last to guide, it is the better projector on the constraint at a comparable time; at one or two evaluations both projectors only project the finished plan. It rarely shortens the task.<br>
-<span class="muted">Shown by D3IL-aligning: more contexts violation-free in 7 of 9 comparisons; on UAV-corridor a trade-off.</span></li>
+<li><strong>RQ2 · Yes, where it has a step to guide.</strong> On D3IL-aligning, the task that needs the budget, endpoint projection keeps more contexts violation-free than per-step projection, in 7 of 9 comparisons at a comparable time. On D3IL-avoiding and UAV-pillars the average-velocity models need only one or two evaluations, where it has no step to guide: both projectors then only project the finished plan. It rarely shortens the task.<br>
+<span class="muted">Shown by D3IL-aligning; the no-step case by a run at two evaluations; on UAV-corridor a trade-off.</span></li>
 <li><strong>RQ3 · Yes: with cameras and contact, and on the quadrotor.</strong> On D3IL-aligning Analytic-MeanFM leads again; on the quadrotor the declared constraints transfer exactly and projection works in 3-D. Two caveats: on very simple demonstrations the average-velocity models bring no gain (they tie with FM, or FM leads), and on the quadrotor the controller matters more: on sharp turns it decides whether a plan is flown.<br>
 <span class="muted">Shown by D3IL-aligning and UAV-pillars; the caveats by UAV-corridor and UAV-s-curve.</span></li>
 </ul>
 </div>
 <aside class="notes">
-<p>16:31 → 17:46<br>
-Key: RQ1 yes on DPCC’s benchmark · RQ2 depends on the budget: better on the constraint where it can guide · RQ3 yes, with cameras and contact and on the quadrotor, with two caveats.</p>
+<p>16:31 → 17:51<br>
+Key: RQ1 yes on DPCC’s benchmark · RQ2 yes where it has a step to guide (aligning) · RQ3 yes, with cameras and contact and on the quadrotor, with two caveats.</p>
 <ul>
 <li>RQ1 yes: one evaluation keeps the baseline’s success within the constraints, fewer steps, a thirtieth of the time · diffusion at one step loses it → G 29</li>
-<li>RQ2 depends: a step to guide → better on the constraint at comparable time (aligning, 7 of 9) · one or two evaluations → both only project the finished plan · rarely shorter · corridor: trade-off → G 31, G 35</li>
+<li>RQ2 yes, where it can guide: aligning, the task that needs the budget → more contexts violation-free in 7 of 9 at comparable time · avoiding, pillars: one or two evaluations → no step to guide, both only project the finished plan · rarely shorter · corridor: trade-off → G 31, G 59, G 35</li>
+<li>If asked “on aligning, is endpoint the only projector that works?”: no · per-step also keeps 9 of 10 contexts violation-free on Analytic-MeanFM, and closes 61 % against 57 % · endpoint keeps all 10 and wins 7 of 9 comparisons · no context reaches the 1.8 cm test either way</li>
 <li>RQ3 yes: cameras and contact (Analytic-MeanFM leads again) and the quadrotor (the constraints transfer exactly, projection in 3-D) · caveats: very simple demonstrations → no gain from the average-velocity models (tie, or FM leads) · the controller matters more on the quadrotor → G 31, G 34, G 35</li>
 <li>If asked “what holds across the environments?” (no longer on the slide): projection time ↔︎ distance from feasible (G 67) · the two average-velocity models: level on avoiding, far apart on aligning · the demonstrations bound what a model can show</li>
 </ul>
@@ -2119,31 +2120,28 @@ display:block!important;
 </tr>
 <tr class="even">
 <td style="text-align: left;">The plan is a sequence of positions; below it is the plant’s controller.</td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: center;">→</td>
+<td style="text-align: left;">Plans of actuator commands: joint torques or rotor thrusts.</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">An obstacle that moves during an episode is not evaluated.</td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">Every environment is a simulation.</td>
-<td style="text-align: center;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: center;">→</td>
+<td style="text-align: left;">The step to a real arm and a real vehicle (sim-to-real).</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p><span class="lead">Thank you · Questions</span></p>
 <aside class="notes">
-<p>17:46 → 18:41 · stays on screen during the Q&amp;A<br>
-Key: Three limits with a next step (hand-declared constraints → perception; generated demonstrations → human ones; eight steps → a longer horizon), three without one.</p>
+<p>17:51 → 18:46 · stays on screen during the Q&amp;A<br>
+Key: Five limits, each with its next step: perception, human demonstrations, a longer horizon, actuator commands, a real robot.</p>
 <ul>
 <li>declared by hand, obstacle by obstacle → constraints from perception: sensing that emits the projector’s primitives</li>
 <li>generated quadrotor demonstrations, one path forward → human demonstrations</li>
 <li>eight-step plans: a constraint enters when the horizon reaches it → a longer horizon</li>
-<li>no next step here: the plan is positions, the controller below it · a moving obstacle is not evaluated · all simulated</li>
+<li>the plan is positions, the controller below → plans of actuator commands (torques, rotor thrusts)</li>
+<li>all simulated → the step to a real arm and vehicle</li>
+<li>If asked “are the actuator plans in the thesis?”: not in its Future Work; the limit is (positions, never actuator commands) · not a small step: the projection’s dynamics rows would have to model the plant itself, not a first-order integrator</li>
 <li>thank you — questions · stay on this slide; G + number for the supplement</li>
 <li>If asked “can an obstacle move?”: a changed geometry needs a new feasible set, not a new model · one that moves during an episode is not evaluated</li>
 <li>Q&amp;A map, G + slide (each has its If-asked lines): FM’s few-step weakness → 13 · stop-gradient → 21, 22 · why mix FM in, half at h = 0 → 23 · MF uses FM’s velocity at inference → 25 (G 58) · both projectors’ rows and threshold → 25 · just MPC? → 26 · the IK: RRT, QP? → 32 · MuJoCo MPC: what is it, is it fair? → 35 · paths cross? more K? why one step? → 14, 16, 18</li>
@@ -2164,7 +2162,7 @@ display:block!important;
 <section id="end" class="slide level2 endslide" data-footer="false" data-section>
 <h2>End</h2>
 <aside class="notes">
-<p>18:41 · End of the talk; the Q&amp;A runs on the Answers slide or here. The supplement follows: the references, the moved explanations, the thesis figures behind the charts.</p>
+<p>18:46 · End of the talk; the Q&amp;A runs on the Answers slide or here. The supplement follows: the references, the moved explanations, the thesis figures behind the charts.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;
