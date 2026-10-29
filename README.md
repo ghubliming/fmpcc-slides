@@ -6,8 +6,8 @@ Pages. The deck is one self-contained HTML file, so this repository only holds t
 | | |
 | :-- | :-- |
 | **Branches** | `master` holds only a minimal README. The site lives on `test`, which Pages publishes from. `bkp-v3.12-no-animation` keeps the last deck without the animations (v3.12, 2026-10-14) as a backup; it is not published. |
-| **Site** | `index.html` = deck v4.2 (result slides on the thesis's own figures and tables; slide numbers n / End, then i, ii … in the supplement), the method told by animation beats (muted clips; each plays and holds, a click plays on) · `presentation.pdf` = its PDF backup (each beat as its last frame) · `.nojekyll` = serve the files as they are |
-| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v4/v4.2/` on 2026-10-29: the hot updates of that day (speaker notes with If-asked blocks; slide 2; slide 18; the answers as a table, slide 36; limitations and outlook, five pairs, slide 37) (sha256 `c68afa02c5329d1e…` / `9686ce83dedb5b57…`) |
+| **Site** | `index.html` = deck v4.2 (result slides on the thesis's own figures and tables, plus one chart drawn for the talk from Thesis Table 6.5 on slide 31; slide numbers n / End, then i, ii … in the supplement), the method told by animation beats (muted clips; each plays and holds, a click plays on) · `presentation.pdf` = its PDF backup (each beat as its last frame) · `.nojekyll` = serve the files as they are |
+| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v4/v4.2/` on 2026-10-29, after that day's hot updates: speaker notes with planned clocks and If-asked blocks; slide 2 (classical MPC against DPCC); slide 18; the title slide; slide 31 with the projector result as a three-measure chart from Table 6.5; the answers as a table, with RQ2 as the thesis answers it (slide 36); limitations and outlook, five pairs (slide 37) (sha256 `f052ed019b495385…` / `5b0120d59279e623…`) |
 | **Live** | https://ghubliming.github.io/fmpcc-slides/ |
 | **Plan** | `FM-PCC/logs_in_develop/Writing/Presentation/plan/HOSTING.md`, section "Test setup" |
 
