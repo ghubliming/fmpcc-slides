@@ -1504,6 +1504,12 @@ Key: The identity: u equals v plus h times the rate at which the chord turns.</p
 <li>slide the start, destination fixed → the chord turns · u = v + h × that rate</li>
 <li>analytic target: the identity · CI target: its finite-step form</li>
 </ul>
+<p><strong>If asked</strong></p>
+<ul>
+<li>“where does the identity come from?”: h·u = ∫ from r to r+h of v = the displacement · slide the start r, hold the end τ, differentiate in r: left −u + h·du/dr (since dh/dr = −1), right −v(x_r, r) (the lower limit) → u = v + h·du/dr · exact, no approximation</li>
+<li>“what is d/dr here?”: the total change of the chord as its start slides along the path: the point moves by v·dr, r grows by dr, h shrinks by dr → (∂x u)·v + ∂r u − ∂h u</li>
+<li>“why is it useful?”: everything on the right is available at the start: v from the training pair, du/dr from the network itself → a training target for u without integrating the flow</li>
+</ul>
 <!-- notes source: Time 0:14 · Thesis: eq:bg:mf:identity · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
 span.MJX_Assistive_MathML {
@@ -1534,6 +1540,11 @@ Key: Analytic-MeanFM: the target comes from the exact derivative, one Jacobian�
 <li>“why stop-gradient?”: FM has a given label, x₁ − x₀; the interval average has none → the network builds its own target, v + h·JVP · sg makes it act like given data for this update · here it also avoids differentiating through the JVP (the MeanFlow paper’s own reason) → G 49, G 53</li>
 <li>“so it stops learning?”: no · forward: the target’s value is used · backward: nothing flows through the target; the prediction outside sg trains the shared weights · the target is rebuilt after each update · at inference there is no sg: the sampler only evaluates u_θ</li>
 <li>“must it be sg, is it optimal?”: a chosen training rule, not a theorem, not claimed optimal · without it the update would also differentiate the target’s construction (the JVP), and with noisy targets it can change what is learned, not only the speed</li>
+<li>“how does training work, step by step?”: noise x₀, a plan x₁, two times (larger τ, smaller r; half of the samples r = τ) → x_r on the straight line, h = τ − r, v = x₁ − x₀ → one forward pass gives u_θ(x_r, r, h) and, in forward mode, its JVP along (v, +1, −1) → target v + h·JVP, frozen → loss ϱ(‖u_θ − target‖²) + ϱ(‖v_θ − v‖²) → one update</li>
+<li>“why does a target from one noisy pair and the network itself learn the right u?”: the target is linear in v · averaged over all pairs through the same point, it is the identity with FM’s velocity · with sg the update is at rest exactly when u_θ satisfies that identity, which pins down the true average velocity (MeanFlow’s argument, under its conditions; sanity check 20 derives the rest point for the plain loss; not a convergence proof)</li>
+<li>“what is a JVP, concretely?”: the directional derivative of the network: how its output changes when the plan moves by v, r by +1 and h by −1, together · forward-mode autodiff gives it exactly at about one extra pass; the Jacobian is never built</li>
+<li>“the toy numbers?”: u = 2r + h → partials (0, 2, 1) · tangent (0.4, +1, −1) → JVP = 2 − 1 = 1 · target 0.4 + 0.6 × 1 = 1 = the chord (toy)</li>
+<li>“why analytic?”: the derivative is exact, by autodiff, not a finite difference · the target still uses the network</li>
 </ul>
 <!-- notes source: Time 0:24 · Thesis: eq:bg:mf:jvp, eq:method:engine:mftgt, sec:method:meanflow · Animation A1 (illustration, not thesis data) · 1 click -->
 <style type="text/css">
@@ -1562,6 +1573,10 @@ Key: CI-MeanFM: a finite step plus the network’s own prediction replaces the d
 <p><strong>If asked</strong></p>
 <ul>
 <li>“and the stop-gradient here?”: the same rule · the predicted rest of the interval is the label for this update; the whole-interval prediction outside sg trains · no JVP here, so sg is not only about second derivatives · α = 1 or h = 0 → target v, FM’s · exact α = 0 → the analytic branch, never 0 put into this formula → G 50, G 54</li>
+<li>“why is this target right?”: additivity of chords: the chord of [r, r + h] = α × (the chord of a first piece δ = αh) + (1 − α) × (the chord of the rest) · the first piece is taken straight along the training pair (to x_r + δv, where that path is exactly straight), the rest from the network’s own frozen prediction</li>
+<li>“what does α do?”: α = 1 → the target is v, FM’s · small α → a short straight piece and more weight on the network’s own chord; the residual divided by α tends to the analytic one (first-order, Zhang et al.) · scheduled from 1 and held at 0.2; the loss is weighted by α</li>
+<li>“how does it differ from Analytic-MeanFM?”: no derivative: a second evaluation of the network at the shifted point replaces the JVP · both targets use the network: one its derivative, the other its shifted output</li>
+<li>“why does CI-MeanFM plateau on aligning?”: the thesis’s untested account: part of its target is its own frozen output, so its error can enter the field it learns</li>
 </ul>
 <!-- notes source: Time 0:20 · Thesis: eq:method:engine:aftgt, eq:method:engine:afloss, sec:method:alphaflow · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1590,6 +1605,8 @@ Key: One network for both, half of its samples at h = 0, where the target is the
 <ul>
 <li>“where is MF FM?”: at h = 0 the average velocity is FM’s velocity, u(x, r, 0) = v, so there the target is FM’s · at inference: endpoint projection (slide 25)</li>
 <li>“why mix FM in, and why half?”: the boundary is mathematics: at h = 0 the average must equal the instantaneous velocity · the 50 % share and the extra instantaneous head are recipe choices, not proven necessary or optimal (MeanFlow’s own test: mixing helped, it was not mandatory) · sampling uses the average head only · not “half FM, half MF” as one total loss → G 52</li>
+<li>“how is one training sample built?”: x₀, x₁, times r ≤ τ (logit-normal; half with r = τ) → x_r = (1 − r)x₀ + r·x₁, h = τ − r, v = x₁ − x₀ → the average head regresses its target (at h = 0: v), the auxiliary head regresses v → two reweighted squared errors, one update</li>
+<li>“what is ϱ?”: the adaptive reweighting e / sg((e + c)^p), after MeanFlow: large residuals count less (for p = 1, CI-MeanFM, e/(e + c), capped near 1), so outliers do not dominate</li>
 </ul>
 <!-- notes source: Time 0:12 · Thesis: sec:method:meanflow, sec:method:alphaflow · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1614,6 +1631,10 @@ Key: Four generative models inside one constrained controller; the objective, it
 <ul>
 <li>4 models, 1 constrained controller: Diffusion, FM, Analytic-MeanFM, CI-MeanFM</li>
 <li>shared: backbone, projection, data, protocol · changed: objective, training recipe, sampler</li>
+</ul>
+<p><strong>If asked</strong></p>
+<ul>
+<li>“the four training targets, in one line each?”: Diffusion: the added noise ε · FM: v = x₁ − x₀ · Analytic-MeanFM: v + h·JVP of the network, frozen · CI-MeanFM: α·v + (1 − α)·the network’s frozen prediction at the shifted point · all regressed by a squared error; the two average-velocity models also regress v with an auxiliary head</li>
 </ul>
 <!-- notes source: Time 0:15 · Thesis: sec:method:alphaflow (what is shared), tab:train (recipes) · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1939,6 +1960,13 @@ Key: The planning side stays; below the setpoint the plant and its controller ch
 <ul>
 <li>“which PID?” → G 65: a PD cascade, no integral term</li>
 <li>“how is the IK solved? RRT? a QP?”: differential IK, no planner, no optimiser · forward kinematics → clipped error × gain = wanted hand velocity → damped least-squares inverse of the Jacobian, one 6 × 6 solve → joint velocities, the spare joint pulled to a rest posture → a joint PD law makes the torques · three iterations per call (the thesis: per control step; the code: every 1 ms physics step) · obstacles are the plan’s and the projection’s job; the only QP-type solver is SLSQP in the projection</li>
+<li>“what does ξ mean?”: the clipped error to the setpoint × gain = the hand velocity wanted · 3 cm off → clip 1 cm → × 200 → 2 → about 2 mm per IK round (code)</li>
+<li>“what does the IK formula do?”: J maps joint speeds to hand speed · 7 joints, 6 numbers → many solutions → Jᵀ(JJᵀ + λI)⁻¹ picks the smallest · the null-space term pulls the elbow to a rest posture without moving the hand</li>
+<li>“where is the PD?”: arm: τ = K_p(q_des − q) + K_d(q̇_des − q̇) + g(q), the joint PD (the code’s form) · quadrotor outer: −K_p·e_p (P) − K_d·e_v (D) · inner: −K_R·e_R (P) − K_ω·ω (D) · no I anywhere</li>
+<li>“the outer loop in numbers?”: 0.3 m behind → a = 4 × 0.3 = 1.2 m/s² → F = m(a + g·e₃) = (1.59, 0, 13.00) N → point the thrust axis along F: a tilt of 6.97°</li>
+<li>“what are e_R and the vee?”: the rotation from where the vehicle points to where it should, as a vector: its direction the axis, its length the sine of the angle · here (0, −0.121, 0) → τ = 70 × 0.121 ≈ 8.5 N·m in pitch</li>
+<li>“allocation?”: M (4 × 4) maps the four thrusts to the total thrust and three torques (lever arms 0.18 and 0.14 m; drag 0.0201) → u = M⁻¹[T; τ] = (18.4, 18.4, −11.9, −11.9) N, impossible → saturation keeps the thrust and scales the torque → (6.5, 6.5, 0, 0) N: a big jump is flown bang–bang</li>
+<li>“why a cascade?”: the attitude loop is 22–26× faster than the position loop, so each wanted tilt is reached before a new one is asked (computed) · the full math: deck/CHECK_22</li>
 </ul>
 <!-- notes source: Time 0:45 · Thesis: sec:method:ik, sec:method:geometric, sec:method:setpoint, tab:embodiments · Animation A2 (illustration, not thesis data) · 1 click -->
 <style type="text/css">
