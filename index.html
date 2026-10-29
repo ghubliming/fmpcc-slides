@@ -1891,8 +1891,8 @@ overflow: hidden!important;
 display:block!important;
 }</style></aside>
 </section>
-<section id="on-d3il-aligning-only-analytic-meanfm-moves-the-box-most-of-the-way-before-and-after-projection" class="slide level2">
-<h2>On D3IL-aligning only Analytic-MeanFM moves the box most of the way, before and after projection</h2>
+<section id="on-d3il-aligning-only-analytic-meanfm-moves-the-box-and-endpoint-projection-removes-its-last-violations" class="slide level2">
+<h2>On D3IL-aligning only Analytic-MeanFM moves the box, and endpoint projection removes its last violations</h2>
 <div class="columns">
 <div class="column" style="width:49%;">
 <div class="quarto-figure quarto-figure-center">
@@ -1912,20 +1912,24 @@ display:block!important;
 <div class="compact">
 <ul>
 <li><strong>Before projection, only Analytic-MeanFM moves the box:</strong> 84 % of the distance closed at <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="7.291ex" height="1.731ex" role="img" focusable="false" viewbox="0 -683 3222.6 765" xlink="http://www.w3.org/1999/xlink"><defs><path id="MJX-1-TEX-I-1D43E" d="M285 628Q285 635 228 637Q205 637 198 638T191 647Q191 649 193 661Q199 681 203 682Q205 683 214 683H219Q260 681 355 681Q389 681 418 681T463 682T483 682Q500 682 500 674Q500 669 497 660Q496 658 496 654T495 648T493 644T490 641T486 639T479 638T470 637T456 637Q416 636 405 634T387 623L306 305Q307 305 490 449T678 597Q692 611 692 620Q692 635 667 637Q651 637 651 648Q651 650 654 662T659 677Q662 682 676 682Q680 682 711 681T791 680Q814 680 839 681T869 682Q889 682 889 672Q889 650 881 642Q878 637 862 637Q787 632 726 586Q710 576 656 534T556 455L509 418L518 396Q527 374 546 329T581 244Q656 67 661 61Q663 59 666 57Q680 47 717 46H738Q744 38 744 37T741 19Q737 6 731 0H720Q680 3 625 3Q503 3 488 0H478Q472 6 472 9T474 27Q478 40 480 43T491 46H494Q544 46 544 71Q544 75 517 141T485 216L427 354L359 301L291 248L268 155Q245 63 245 58Q245 51 253 49T303 46H334Q340 37 340 35Q340 19 333 5Q328 0 317 0Q314 0 280 1T180 2Q118 2 85 2T49 1Q31 1 31 11Q31 13 34 25Q38 41 42 43T65 46Q92 46 125 49Q139 52 144 61Q147 65 216 339T285 628Z" /><path id="MJX-1-TEX-N-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z" /><path id="MJX-1-TEX-N-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" /><path id="MJX-1-TEX-N-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" /></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="1D43E" href="#MJX-1-TEX-I-1D43E" /></g><g data-mml-node="mo" transform="translate(1166.8,0)"><use data-c="3D" href="#MJX-1-TEX-N-3D" /></g><g data-mml-node="mn" transform="translate(2222.6,0)"><use data-c="32" href="#MJX-1-TEX-N-32" /><use data-c="30" href="#MJX-1-TEX-N-30" transform="translate(500,0)" /></g></g></g></svg></mjx-container>, against 14, 10 and −2 % for CI-MeanFM, FM and Diffusion.</li>
-<li><strong>After projection, only it keeps nine or ten of ten contexts clean:</strong> eight contexts violate without a projector, one with per-step, none with endpoint projection.</li>
-<li><strong>The price is distance:</strong> its projected points sit below the grey ring; no context ends within the task’s 1.8 cm.</li>
+<li><strong>After projection, endpoint projection is better on the constraint:</strong> none of Analytic-MeanFM’s contexts violates, against one with per-step and eight without a projector, at about the same time (275 against 266 ms).</li>
+<li><strong>The price is distance:</strong> both projected points sit below the grey ring; no context ends within the task’s 1.8 cm.</li>
 </ul>
 </div>
 <aside class="notes">
 <p>12:06 → 13:01<br>
-Key: Only Analytic-MeanFM really moves the box, before and after projection; projection keeps it clean and costs distance.</p>
+Key: Only Analytic-MeanFM really moves the box; after projection, endpoint projection is better on the constraint, at about the same time; the price is distance.</p>
 <ul>
 <li>before projection: only Analytic-MeanFM closes most of the distance; the others barely move the box</li>
-<li>after projection: only Analytic-MeanFM keeps its contexts clean; endpoint projection leaves no violation</li>
+<li>after projection: endpoint projection is the better projector on the constraint: no violating context, against one with per-step and eight without, at about the same time</li>
+<li>the ring marks per-step: a little ahead on these two axes; ten clean against nine is not an axis</li>
 <li>the price: the box ends farther from its target; no context reaches the task’s tolerance</li>
 </ul>
 <p><strong>If asked</strong></p>
 <ul>
+<li>“is endpoint the only projector that works?”: no · per-step keeps nine of ten clean, endpoint all ten (Table 6.5) · across the three flow models and the three selection rules, endpoint keeps more contexts clean in seven of nine comparisons (Table 6.6) · at ten evaluations it is also the cheaper one: 193 against 518 ms</li>
+<li>“why is per-step ringed?”: the rings mark the non-dominated filled points on the two axes: per-step (61 %, 266 ms) is ahead of endpoint (57 %, 275 ms) · filled means at least nine clean, so the figure cannot show ten against nine</li>
+<li>“all ten, really?”: one context is never attempted on the tightened set: the enlarged obstacle overlaps its box and the guard holds it · it scores clean and unmoved in every row, so ten of ten is nine of nine attempted, for both projectors alike</li>
 <li>the full figures → G 68, G 69</li>
 </ul>
 <!-- notes source: Time 0:55 · Thesis: fig:aligning-tradeoff, fig:aligning-projected-tradeoff, tab:va-models, tab:va-projection (which contexts change under projection), tab:va-projection-models, sec:res:aligning:conclusion, sec:conc:rq1, sec:conc:rq2 -->
