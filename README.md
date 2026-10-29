@@ -7,7 +7,7 @@ Pages. The deck is one self-contained HTML file, so this repository only holds t
 | :-- | :-- |
 | **Branches** | `master` holds only a minimal README. The site lives on `test`, which Pages publishes from. `bkp-v3.12-no-animation` keeps the last deck without the animations (v3.12, 2026-10-14) as a backup; it is not published. |
 | **Site** | `index.html` = deck v4.2 (result slides on the thesis's own figures and tables; slide numbers n / End, then i, ii … in the supplement), the method told by animation beats (muted clips; each plays and holds, a click plays on) · `presentation.pdf` = its PDF backup (each beat as its last frame) · `.nojekyll` = serve the files as they are |
-| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v4/v4.2/` on 2026-10-29: the hot updates of that day (the speaker notes: the planned clock, Q&A lines; slide 37: the three answers; slide 2: classical MPC against DPCC; slide 18: why one step works) (sha256 `7fdcf4240709b1d1…` / `4f881a0434b423fe…`) |
+| **Source** | copied unchanged from `FM-PCC/logs_in_develop/Writing/Presentation/output/v4/v4.2/` on 2026-10-29: the hot updates of that day (speaker notes; slide 2; slide 18; the answers now slide 36, then limitations and outlook as the last slide, 37) (sha256 `afcb5b93cf850c9a…` / `9c17d7d9f14c4055…`) |
 | **Live** | https://ghubliming.github.io/fmpcc-slides/ |
 | **Plan** | `FM-PCC/logs_in_develop/Writing/Presentation/plan/HOSTING.md`, section "Test setup" |
 
