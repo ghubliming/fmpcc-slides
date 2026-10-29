@@ -2080,32 +2080,26 @@ display:block!important;
 </section>
 <section id="answers-to-the-research-questions" class="slide level2">
 <h2>Answers to the research questions</h2>
-<div class="columns compact">
-<div class="column" style="width:56%;">
+<div class="compact">
 <ul>
-<li><strong>RQ1 — Yes, on the benchmark of DPCC.</strong> With human demonstrations the average-velocity models come first; with the generated quadrotor demonstrations the objectives tie, or the simplest leads.</li>
-<li><strong>RQ2 — Where it has steps to guide.</strong> Endpoint projection guides the sample only where the budget and the threshold leave a step before the terminal one; there it is the better projector on the constraint at a comparable planning time. It rarely shortens the task, and on the corridor it trades.</li>
-<li><strong>RQ3 — Where the demonstrations are of the same kind.</strong> The answers hold on camera observations and contact, and the constraints transfer to the quadrotor; the plant and the demonstrations change the rest.</li>
+<li><strong>RQ1 · Yes, on the benchmark of DPCC.</strong> At one network evaluation, CI-MeanFM and FM keep the baseline’s success within the constraints, in fewer control steps, at about a thirtieth of its time; diffusion run at one step loses it.<br>
+<span class="muted">Shown by D3IL-avoiding (slide 29).</span></li>
+<li><strong>RQ2 · It depends on the budget.</strong> Where endpoint projection has a step before the last to guide, it is the better projector on the constraint at a comparable time; at one or two evaluations both projectors only project the finished plan. It rarely shortens the task.<br>
+<span class="muted">Shown by D3IL-aligning: more contexts violation-free in 7 of 9 comparisons (slide 31); on the corridor a trade-off (slide 35).</span></li>
+<li><strong>RQ3 · Yes with cameras and contact; on the quadrotor, partly.</strong> On D3IL-aligning Analytic-MeanFM leads again. On the quadrotor the declared constraints transfer and projection works in 3-D, but an undeclared pillar ends a flight, the controller decides on sharp turns, and on the simple generated demonstrations the models tie or FM leads.<br>
+<span class="muted">Shown by D3IL-aligning (slide 31) and the quadrotor scenes (slides 34–35).</span></li>
 </ul>
-</div><div class="column sep" style="width:38%;">
-<p><strong>Across the environments</strong></p>
-<ol type="1">
-<li>The time a projection takes depends on how far from feasible the plan it receives is.</li>
-<li>The two average-velocity models are level on D3IL-avoiding and far apart on D3IL-aligning.</li>
-<li>The demonstrations bound what a model can show.</li>
-</ol>
-</div></div>
+</div>
 <p><span class="lead">Thank you · Questions</span></p>
 <aside class="notes">
-<p>16:48 → 18:08 · stays on screen during the Q&amp;A<br>
-Key: Yes on DPCC’s benchmark; endpoint projection helps where it has steps to guide; the answers hold where the demonstrations are alike.</p>
+<p>16:48 → 18:03 · stays on screen during the Q&amp;A<br>
+Key: RQ1 yes on DPCC’s benchmark · RQ2 depends on the budget: better on the constraint where it can guide · RQ3 yes with cameras and contact, partly on the quadrotor.</p>
 <ul>
-<li>RQ1 yes on DPCC’s benchmark: the success within the constraints at 1 evaluation, fewer steps, a thirtieth of the time</li>
-<li>human demos → average-velocity models first · generated quadrotor demos → tie, or the simplest leads</li>
-<li>RQ2 guides only with a step before the last · there: better projector on the constraint at comparable time · rarely shortens the task · corridor: trade-off</li>
-<li>RQ3 holds where the demonstrations are alike: cameras, contact; declared constraints transfer · plant + demonstrations change the rest</li>
-<li>3 findings: projection time ↔︎ distance from feasible (a plan close to the feasible set is cheap to repair) · the two average-velocity models: level on avoiding, far apart on aligning · demos bound the model</li>
+<li>RQ1 yes: one evaluation keeps the baseline’s success within the constraints, fewer steps, a thirtieth of the time · diffusion at one step loses it (slide 29)</li>
+<li>RQ2 depends: a step to guide → better on the constraint at comparable time (aligning, 7 of 9) · one or two evaluations → both only project the finished plan · rarely shorter · corridor: trade-off</li>
+<li>RQ3 yes with cameras and contact: Analytic-MeanFM leads again · quadrotor partly: the constraints transfer, projection in 3-D · undeclared pillars, the controller and the simple demonstrations change the rest</li>
 <li>thank you — questions · stay on this slide; G + number for the supplement</li>
+<li>If asked “what holds across the environments?” (no longer on the slide): projection time ↔︎ distance from feasible (G 67) · the two average-velocity models: level on avoiding, far apart on aligning · the demonstrations bound what a model can show</li>
 <li>Q&amp;A map, G + slide (each has its If-asked lines): FM’s few-step weakness → 13 · stop-gradient → 21, 22 · why mix FM in, half at h = 0 → 23 · MF uses FM’s velocity at inference → 25 (G 58) · both projectors’ rows and threshold → 25 · just MPC? → 26 · the IK: RRT, QP? → 32 · MuJoCo MPC fair? → 35</li>
 </ul>
 <!-- notes source: Time 1:20 · Thesis: sec:conc:rq1, sec:conc:rq2, sec:conc:rq3, sec:res:summary:conclusion · stays on screen during the Q&A -->
@@ -2124,7 +2118,7 @@ display:block!important;
 <section id="end" class="slide level2 endslide" data-footer="false" data-section>
 <h2>End</h2>
 <aside class="notes">
-<p>18:08 · End of the talk; the Q&amp;A runs on the Answers slide or here. The supplement follows: the references, the moved explanations, the thesis figures behind the charts.</p>
+<p>18:03 · End of the talk; the Q&amp;A runs on the Answers slide or here. The supplement follows: the references, the moved explanations, the thesis figures behind the charts.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;
