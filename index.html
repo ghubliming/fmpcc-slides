@@ -1424,6 +1424,7 @@ Key: The average velocity is the chord over an interval, not the tangent at a po
 <p><strong>If asked</strong></p>
 <ul>
 <li>“where does it become FM’s velocity?”: h → 0, the chord becomes the tangent, u(x, r, 0) = v · in training at h = 0 (slide 23) · at inference only in endpoint projection (slide 25)</li>
+<li>“what exactly is learned?” (sanity check 24, longer version): u(x_r, r, h, c) = (x_(r+h) − x_r)/h, the average over [r, r+h] along the flow · x = the whole noisy plan, r = where we are between noise and data, h = how far ahead we ask, c = the observation (cameras on aligning), θ = the weights · times h it is a displacement, so x_r + h·u_θ predicts the interval end · a velocity in generation time, not the robot’s speed · why: the tangent only tells the direction now; a correct average lets one big jump reach the end of a curved flow (a learned one can still be off)</li>
 </ul>
 <!-- notes source: Time 0:16 · Thesis: eq:bg:mf:def · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1479,6 +1480,7 @@ Key: The interval is a network input: K steps of length 1/K, the budget still ch
 <p><strong>If asked</strong></p>
 <ul>
 <li>“is this FM’s sampler?”: no · it asks a finite interval, h = 1/K, not FM’s velocity · only as K grows does h → 0 and the step tend to FM’s Euler step · FM’s velocity itself: endpoint projection (slide 25)</li>
+<li>“how does the learned average become a plan?” (sanity check 24): weights fixed, K chosen, h = 1/K · K = 1: one call for 0 → 1 · K = 2: average 0 → ½, then from the new point ½ → 1 · each call is one forward pass: no JVP, no target at inference · an exact average needs one jump; a learned one may gain from shorter intervals, not guaranteed · endpoint projection uses a different query, h = 0 → G 25</li>
 </ul>
 <!-- notes source: Time 0:09 · Thesis: eq:method:engine:mfsample · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1545,6 +1547,7 @@ Key: Analytic-MeanFM: the target comes from the exact derivative, one Jacobian�
 <li>“what is a JVP, concretely?”: the directional derivative of the network: how its output changes when the plan moves by v, r by +1 and h by −1, together · forward-mode autodiff gives it exactly at about one extra pass; the Jacobian is never built</li>
 <li>“the toy numbers?”: u = 2r + h → partials (0, 2, 1) · tangent (0.4, +1, −1) → JVP = 2 − 1 = 1 · target 0.4 + 0.6 × 1 = 1 = the chord (toy)</li>
 <li>“why analytic?”: the derivative is exact, by autodiff, not a finite difference · the target still uses the network</li>
+<li>“point-by-point, why the derivative?” (sanity check 24): v = the known pair direction (local data) · h·JVP = the correction from that tangent to the interval average · picture: keep the end time fixed, slide the start forward along the flow; the shorter interval must still predict the same end, and the identity says how the average must change for that · JVP = three inputs moving together: plan by v, start +1, interval −1; context fixed · it is a calculation on the current network, not an extra output · toy: 0.4 + 0.6 × 1 = 1</li>
 </ul>
 <!-- notes source: Time 0:24 · Thesis: eq:bg:mf:jvp, eq:method:engine:mftgt, sec:method:meanflow · Animation A1 (illustration, not thesis data) · 1 click -->
 <style type="text/css">
@@ -1577,6 +1580,7 @@ Key: CI-MeanFM: a finite step plus the network’s own prediction replaces the d
 <li>“what does α do?”: α = 1 → the target is v, FM’s · small α → a short straight piece and more weight on the network’s own chord; the residual divided by α tends to the analytic one (first-order, Zhang et al.) · scheduled from 1 and held at 0.2; the loss is weighted by α</li>
 <li>“how does it differ from Analytic-MeanFM?”: no derivative: a second evaluation of the network at the shifted point replaces the JVP · both targets use the network: one its derivative, the other its shifted output</li>
 <li>“why does CI-MeanFM plateau on aligning?”: the thesis’s untested account: part of its target is its own frozen output, so its error can enter the field it learns</li>
+<li>“why α and 1 − α?” (sanity check 24): displacements add · first piece δ = αh along the known v, the rest h − δ predicted by the network from the shifted point, same end time · velocity × duration for each piece, divided by the whole h → the weights α and 1 − α are time fractions · toy: α = 0.2, h = 0.5 → 0.1 × 2 + 0.4 × 3 = 1.4, / 0.5 = 2.8 (the target is 2.8, not 0.2) · α is scheduled, not learned; a finite α is an approximation, exact additivity holds only for the true field</li>
 </ul>
 <!-- notes source: Time 0:20 · Thesis: eq:method:engine:aftgt, eq:method:engine:afloss, sec:method:alphaflow · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1607,6 +1611,8 @@ Key: One network for both, half of its samples at h = 0, where the target is the
 <li>“why mix FM in, and why half?”: the boundary is mathematics: at h = 0 the average must equal the instantaneous velocity · the 50 % share and the extra instantaneous head are recipe choices, not proven necessary or optimal (MeanFlow’s own test: mixing helped, it was not mandatory) · sampling uses the average head only · not “half FM, half MF” as one total loss → G 52</li>
 <li>“how is one training sample built?”: x₀, x₁, times r ≤ τ (logit-normal; half with r = τ) → x_r = (1 − r)x₀ + r·x₁, h = τ − r, v = x₁ − x₀ → the average head regresses its target (at h = 0: v), the auxiliary head regresses v → two reweighted squared errors, one update</li>
 <li>“what is ϱ?”: the adaptive reweighting e / sg((e + c)^p), after MeanFlow: large residuals count less (for p = 1, CI-MeanFM, e/(e + c), capped near 1), so outliers do not dominate</li>
+<li>“which loss term trains what?” (sanity check 24): first term: the average head against the built interval target · second: a separate instantaneous head against v · both update shared features (and the camera encoder) · ϱ: adaptive weight per head, its denominator frozen · CI: the h &gt; 0 term also weighted by α · h is an input with learned embedding, the JVP a calculation, α a schedule: Adam optimises only the network weights</li>
+<li>“what is frozen by sg?”: the target’s value is kept as if it were data for this one update; gradients still flow into the prediction · next update rebuilds the target with the new weights · in Analytic-MeanFM it also avoids differentiating through the JVP · a training rule; sg does not make an imperfect target ground truth</li>
 </ul>
 <!-- notes source: Time 0:12 · Thesis: sec:method:meanflow, sec:method:alphaflow · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
@@ -1668,6 +1674,9 @@ Key: Per-step projection (DPCC) projects the current iterate; endpoint projectio
 <li>“where does MF use FM’s velocity at inference?”: here · the endpoint lookahead asks Analytic- and CI-MeanFM for their zero-interval head, u_θ(x, τ, 0), the learned stand-in for FM’s velocity · their plain sampler asks h = 1/K → G 58</li>
 <li>“does endpoint projection use the dynamics rows and the threshold too?”: yes · the same DPCC program (dynamics rows, first block pinned to the measured state, tightened geometry, action box) on the same active steps · per-step: the iterate satisfies it · endpoint: the predicted final plan does; the iterates in between need not, the last output does → G 59, G 60</li>
 <li>about HardFlow’s own table (per-step 0.76 against 1.00): its setting, not this one · the thesis’s comparison is its own measurement on this task · the threshold is DPCC’s, in line with that paper’s advice to skip the early steps</li>
+<li>“how exactly does endpoint projection step?” (sanity check 26; every network call at h = 0, ν(x, τ) = u_θ(x, τ, 0)): 1. proposal q = x + Δτ·ν(x, τ) · 2. lookahead x̂₁ = q + (1 − τ_next)·ν(q, τ_next): a guess of the finished plan · 3. project it: z* = Π(x̂₁), the closest plan that meets the constraints · 4. correct: x_next = q + τ_next·(z* − x̂₁) · before the gate only step 1 · last step: no lookahead, τ_next = 1 → the output is z* itself</li>
+<li>“why the factor τ_next?”: q splits into τ × (data estimate) + (1 − τ) × (noise estimate); swap the data estimate x̂₁ for its projection z<em>, keep the noise estimate → q + τ(z</em> − x̂₁) · early, τ is small: a gentle pull; at the end the full correction</li>
+<li>“why h = 0 here, not 1/K?”: the lookahead predicts the final plan from the conditional mean, which is defined by the instantaneous velocity · so the same checkpoint is queried at its zero-interval limit; per-step and unguided keep h = 1/K</li>
 </ul>
 <!-- notes source: Time 0:40 · Thesis: sec:method:dpcc (eq:method:dpcc:step), sec:method:hardflow (eq:method:hf:pred, eq:method:hf:pull), eq:method:hf:nfe, eq:method:proj:gate · Animation A2 (illustration, not thesis data) · 1 click -->
 <style type="text/css">
