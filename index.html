@@ -1123,8 +1123,12 @@ Key: One control step: observe, four candidates, sample with projection, select,
 <li>[click] 4 candidates × 8 waypoints, independent noise</li>
 <li>[click] K = 10 steps · state imposed every step · last 5 projected</li>
 <li>[click] temporal consistency → closest to the previous plan (optional: one from the other mode)</li>
-<li>[click] first increment → setpoint · the other 7 planned, not executed</li>
+<li>[click] first increment → setpoint · the other 7 planned, not executed · replan next step: feedback + look-ahead</li>
 <li>[click] differential IK → joint PD → MuJoCo → next observation</li>
+</ul>
+<p><strong>If asked</strong></p>
+<ul>
+<li>“why a receding horizon, what is the pro?”: feedback: each plan starts from the newest observation, so tracking error and anything that moved (the box, on aligning) are corrected one step later; running all 8 steps would leave 7 open loop · look-ahead: the projection keeps all 8 steps feasible, so the executed step leaves a feasible continuation (when the projection succeeds), and a constraint is seen up to 8 steps before it is reached · DPCC’s own protocol, horizon 8, 1 executed (Table 3.1) · the price: a full plan every control step</li>
 </ul>
 <!-- notes source: Time 0:55 · Thesis: sec:method:overview, eq:method:dep:obs, eq:method:proj:gate, eq:method:sel:rules, eq:method:dep:setpoint, sec:method:ik · Animation A2 (illustration, not thesis data) · 5 clicks -->
 <style type="text/css">
