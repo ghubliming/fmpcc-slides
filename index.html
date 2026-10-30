@@ -1671,7 +1671,7 @@ Key: Per-step projection (DPCC) projects the current iterate; endpoint projectio
 <li>two ways · same step, same noise · same program (closest feasible plan) · last 5 of 10 steps</li>
 <li>[click] per-step (DPCC): project the iterate itself</li>
 <li>endpoint projection: Euler step → predict its finished plan (one extra call) → project that prediction → move the step by τ × the correction</li>
-<li>last step: both project the finished plan · endpoint: +1 evaluation per guiding step → 14 vs 10</li>
+<li>last step: both project the finished plan · endpoint: one extra look-ahead call on each active step but the last → 10 + 4 = 14 network calls, per-step 10</li>
 </ul>
 <p><strong>If asked</strong></p>
 <ul>
@@ -1680,6 +1680,7 @@ Key: Per-step projection (DPCC) projects the current iterate; endpoint projectio
 <li>about HardFlow’s own table (per-step 0.76 against 1.00): its setting, not this one · the thesis’s comparison is its own measurement on this task · the threshold is DPCC’s, in line with that paper’s advice to skip the early steps</li>
 <li>“how does endpoint projection step, exactly?” (thesis 4.62–4.66; the release code; sanity check 26, §4): 1. Euler step x̄ₖ₊₁ = xₖ + Δτ·v(xₖ, τₖ) · 2. predict its finished plan x̄₁ = x̄ₖ₊₁ + (1 − τₖ₊₁)·v(x̄ₖ₊₁, τₖ₊₁), the conditional mean of the data given that point · 3. project it: x̂₁* = Π(x̄₁), DPCC’s program, terminal cost 0 · 4. pull back: xₖ₊₁ = x̄ₖ₊₁ + τₖ₊₁·(x̂₁* − x̄₁) · steps 2–4 only on the active steps, step 1 alone before them · last step, τ = 1: no look-ahead, the output is x̂₁* itself, which meets the constraints when that projection is feasible</li>
 <li>“why τₖ₊₁ in the pull-back?”: the step splits into τ × its predicted finished plan + (1 − τ) × its predicted noise; keep the noise part, swap the finished plan for its projection → x̄ₖ₊₁ + τ(x̂₁* − x̄₁) · early, τ is small: a gentle pull; at the end, the full correction</li>
+<li>“where is the 14 from?”: the slide runs K = 10 steps, the projection on the last 5 (η = 0.5) · per-step: one network call per step → 10 · endpoint: the same 10 Euler calls + one look-ahead call (for x̄₁) on each active step except the last, where 1 − τ = 0 → 4 extra → 14, the caption’s NFE = K + n_guide · both solve the projection on the same 5 steps; only the network calls differ · thesis: NFE = K + n_guide (4.67), n_guide = max{K − ⌊(1 − η)K⌋, 1} − 1 (4.68) · at the aligning operating point, K = 20 and η = 0.2: 20 + 3 = 23 calls (computed)</li>
 <li>“why h = 0 there, not 1/K?”: the predictor x̄ + (1 − τ)·v is the conditional mean of the data, E[x₁ | x_τ] (thesis 4.61), which holds for the instantaneous field · so the average-velocity models are asked their h = 0 slice · per-step and unguided keep h = 1/K</li>
 <li>“doesn’t that give up the average-velocity jump?”: on the endpoint arm, yes: its proposals are Euler steps along the zero-interval slice, so the exact-chord jump is not used there · the thesis therefore compares “the implemented sampling and projection procedures on a fixed checkpoint”, not the projection’s place alone · the chord to the end, x̄ + (1 − τ)·u_θ(x̄, τ, 1 − τ), would predict the flow’s own endpoint instead: not implemented, and the method’s derivation would have to be redone · no run isolates the effect (sanity check 26, §6–8)</li>
 </ul>
