@@ -1483,8 +1483,10 @@ Key: The interval is a network input: K steps of length 1/K, the budget still ch
 </ul>
 <p><strong>If asked</strong></p>
 <ul>
+<li>“it is a one-step method, why can it take more steps?” (sanity check 27): the average is defined for any interval, not only 0 → 1, and training covers many intervals · K steps = K jumps of length h = 1/K, each asked from where the last one landed, with its start k/K: K = 2 is “to halfway, then the rest”, from the same noise, not two generations · with the exact average the jumps chain to the same end as one jump: flow maps compose</li>
+<li>“why take more steps, then?”: the learned average is only approximate, and a shorter interval may be predicted more accurately · on aligning it helped: Analytic-MeanFM closes 39 % of the distance at K = 2, 84 % at K = 20 (Fig. 6.3, slide 31 left) → G 31 · on avoiding one evaluation already keeps the baseline’s success · more steps cost more time and are not guaranteed to help</li>
 <li>“is this FM’s sampler?”: no · it asks a finite interval, h = 1/K, not FM’s velocity · only as K grows does h → 0 and the step tend to FM’s Euler step · FM’s velocity itself: endpoint projection (slide 25)</li>
-<li>“explain the sampler term by term” (sanity check 24, block 7): the weights stay fixed; K is chosen at deployment and sets h = 1/K · K = 1: one call for the whole interval 0 → 1 · K = 2: the average from 0 to ½, then, from the new point, the average from ½ to 1 · each call is a plain forward pass: no JVP and no target at inference · the finished plan gives the first robot action · an exact average lands on the flow at any K; a learned one may gain from shorter intervals, not guaranteed · this is the sampler without projection and with per-step projection; endpoint projection asks h = 0 instead → G 25</li>
+<li>“explain the sampler term by term” (sanity check 24, block 7): the weights stay fixed; K is chosen at deployment and sets h = 1/K · each call is a plain forward pass: no JVP and no target at inference · the finished plan gives the first robot action · this is the sampler without projection and with per-step projection; endpoint projection asks h = 0 instead → G 25</li>
 </ul>
 <!-- notes source: Time 0:09 · Thesis: eq:method:engine:mfsample · Animation A1 (illustration, not thesis data) -->
 <style type="text/css">
